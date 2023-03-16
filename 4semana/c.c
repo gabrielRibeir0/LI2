@@ -2,7 +2,7 @@
 #include <string.h>
 
 int main(){
-    int n, x, j, compLinha, diff;
+    int n, x, compLinha, diff = 1;
     char linha[1000];
 
     if(scanf("%d",&n) != 1){
@@ -13,7 +13,7 @@ int main(){
 
     for(int i = 0; i < n; i++){
         if(scanf("%d", &x) != 1){
-            return 0;
+            return 1;
         }
 
         if(scanf("%s", linha) != 1){
@@ -21,13 +21,13 @@ int main(){
         }
 
         compLinha = strlen(linha);
-        diff = 1;
 
-        for(j = 0; j < compLinha; j++){
-            for(int k = j + 1; k < j + x; k++){
-                if(linha[k] == linha[k-1]){
-                    diff = 0;
-                    break;
+        for(int j = 0; j <= compLinha - x; j++){
+            diff = 1;
+            for(int k = j; diff && k < j + x - 1; k++){
+                for(int l = k + 1; diff && l < j + x; l++){
+                    if(linha[k] == linha[l])
+                        diff = 0;
                 }
             }
             if(diff){
@@ -35,6 +35,7 @@ int main(){
                 break;
             }
         }
+        
         if(!diff)
             posicoes[i] = -1;
     }
