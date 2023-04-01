@@ -1,18 +1,7 @@
 #include <stdio.h>
 
-/*
-fazer o maior de cada pedido + maior dos lucros possiveis
-o maior dos lucros possiveis é com o tempo + tempo do anterior e lucro + lucro do anterior
-se der tempo para fazer, ver o maior dos luros possiveis com esse
-se nao saltar
-
-se nao houver nenhum que de tempo chegou ao fim, retornar 0 so
-
-
-chamada da função inicial, devolver 
-*/
-
 typedef struct pedido{
+    int id;
     int tempoEntrega;
     int tempoConfecao;
     int lucro;
@@ -36,42 +25,40 @@ int maxLista(int lista[], int n){
     return max;
 }
 
-int lucroMax(int tracker,int pedidosPassados[], pedido lista[], int n,int pedidoFeito, int tempo, int lucro){
-    int cont = 0;
-    int listaLucro[n];
+int lucroMax( pedido listaPedidos[], int pedidoAnterior, int tempo, int lucroAcumulado, int pedidosPassados[], int numPedidos, int contagemPedidos){
+    //se a sequência do caminho já tiver o num de pedidos, quer dizer que chegamos ao fim das combinações e devolve o lucro acumulado (caso paragem)
+    if(contagemPedidos == numPedidos)
+        return lucroAcumulado;
 
-    if(tracker == 0)
-        pedidosPassados[0] = pedidoFeito;
+    //se for a primeira chamada da função
+    if(contagemPedidos == 0){
+        pedidosPassados[0] = pedidoAnterior;
+        contagemPedidos++;
+    }
 
-    for(int i = 0; i < n; i++){
-        if()
+    int listaLucro[numPedidos - contagemPedidos]; //só é preciso guardar os lucros de n - contagem caminhos, os que já passamos não é preciso contar
+    int j = 0;
+    for(int i = 0; i < numPedidos; i++){
+        if(estaNaLista(pedidosPassados, contagemPedidos, listaPedidos[i].id))
             continue;
-        if(lista[i].tempoEntrega >= tempo + lista[i].tempoConfecao){
-            listaLucro[i] = lucro + lista[i].lucro + lucroMax(tracker, pedidosPassados, lista,  n, i , lista[i].tempoEntrega, lucro + lista[i].lucro);
-            cont++;
+
+        pedidosPassados[contagemPedidos] = listaPedidos[i].id;
+        
+        if(listaPedidos[i].tempoEntrega >= tempo + listaPedidos[i].tempoConfecao){
+            listaLucro[j] = lucroMax(listaPedidos, listaPedidos[i].id, listaPedidos[i].tempoEntrega, listaPedidos[i].lucro + lucroAcumulado, pedidosPassados, numPedidos, contagemPedidos + 1);
+            j++;
         }
-    }
 
-    if(cont == 0)
-        return 0;
+    }
     
-    return maxLista(listaLucro, cont);
-}
-
-//alterar passagem de structs com aquilo de pointers (?)
-int maior(pedido lista[], int n){
-    int tracker = 0;
-    int listaLucros[n];
-    int pedidosPassados[n];
-    for(int i = 0; i < n; i++){
-        listaLucros[i] = lucroMax(tracker, pedidosPassados, lista, n ,i, lista[i].tempoEntrega, lista[i].lucro);
-    }
-
-    return maxLista(listaLucros, n);
+    if(j == 0)
+        return 0;
+    else
+        return maxLista(listaLucro, j);
 }
  
 int main(){
-    int n, tmp;
+    int n;
 
     if(scanf("%d", &n) != 1){
         return 1;
@@ -80,12 +67,20 @@ int main(){
     pedido listaPedidos[n];
 
     for(int i = 0; i < n; i++){
-        if(scanf("%d %d %d %d", &tmp, &listaPedidos[i].tempoEntrega, &listaPedidos[i].tempoConfecao, &listaPedidos[i].lucro) != 4){
+        if(scanf("%d %d %d %d", &listaPedidos[i].id, &listaPedidos[i].tempoEntrega, &listaPedidos[i].tempoConfecao, &listaPedidos[i].lucro) != 4){
             return 1;
         }
     }
 
-    printf("%d\n", maior(listaPedidos, n));
+    int contagemPedidos = 0;
+    int listaLucros[n];
+    int pedidosPassados[n];
+    for(int i = 0; i < n; i++){
+        listaLucros[i] = lucroMax(listaPedidos, listaPedidos[i].id, listaPedidos[i].tempoEntrega, listaPedidos[i].lucro, pedidosPassados, n, contagemPedidos);
+    }
+
+
+    printf("%d\n", maxLista(listaLucros, n));
 
     return 0;
 }
