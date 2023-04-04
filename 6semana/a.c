@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//ordenar alfabetico e depois comparar letra a letra (?) e ir removedo à medida que se encontra
+
+//função para retirar os espaços e ordenar os nomes alfabeticamente
 void ordenarSemEspacos(char nome[]) {
     int comp = strlen(nome);
     int i, j;
@@ -46,7 +47,7 @@ int main(){
         resultados[i] = (int *) malloc(k * sizeof(int));
         
 
-        if(scanf("%[^\n]s", vilao) != 1){
+        if(scanf(" %[^\n]s", vilao) != 1){
             return 1;
         }
 
@@ -60,7 +61,7 @@ int main(){
             ordenarSemEspacos(candidato);
 
             if(strcmp(vilao,candidato) == 0){
-                resultados[i][count++] = j;
+                resultados[i][count++] = j+1;
             }
         }
 
