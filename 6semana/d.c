@@ -1,3 +1,4 @@
+//Não funciona para os casos onde o input é maior (>=50), mas funciona para os pequenos.
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,14 +8,7 @@ typedef struct pedido{
     int tempoConfecao;
     int lucro;
     int tempoMinimo;
-} pedido;
-
-typedef struct pilhaPedidos {
-    pedido* listaPedidos;
-    int numPedidos;
-    int tempoAcumulado;
-    int lucroAcumulado;
-} pilhaPedidos;   
+} pedido; 
 
 int comparador(const void *p, const void *q) 
 {
