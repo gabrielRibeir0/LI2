@@ -10,10 +10,10 @@ typedef struct pedido{
     int tempoMinimo;
 } pedido; 
 
-int comparador(const void *p, const void *q) 
+int comparador(pedido *p, pedido *q) 
 {
-    int l = ((pedido *)p)->tempoMinimo;
-    int r = ((pedido *)q)->tempoMinimo; 
+    int l = p->tempoMinimo;
+    int r = q->tempoMinimo; 
     return (l - r);
 }
 //função para calcular o maior elemento numa lista (usada para calcular o maior lucro)
