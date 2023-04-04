@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//ordenar os pedidos por tempode entrega antes para depois poder dar break em algum momento e poder poupar «tempo
-//usar qsort()
-
 typedef struct pedido{
     int id;
     int tempoEntrega;
@@ -11,6 +8,13 @@ typedef struct pedido{
     int lucro;
     int tempoMinimo;
 } pedido;
+
+typedef struct pilhaPedidos {
+    pedido* listaPedidos;
+    int numPedidos;
+    int tempoAcumulado;
+    int lucroAcumulado;
+} pilhaPedidos;   
 
 int comparador(const void *p, const void *q) 
 {
