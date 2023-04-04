@@ -1,49 +1,41 @@
+#include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct cozinheiro{
-        char nome[21];
-        int peso;
-        int altura;
-    } cozinheiro;
+    char nome[21];
+    int peso;
+    int altura;
+} cozinheiro;
 
-void comparar(cozinheiro, cozinheiro){
-    //primerio pela diferença a 90 peso
-    //depois altura
-    //depois nome
-}
+//comparador do qsort()
+int comparador(const void *c1, const void *c2){
+    int peso_c1 = ((cozinheiro *)c1)->peso;
+    int peso_c2 = ((cozinheiro *)c2)->peso;
+    int r = abs(90 - peso_c1) - abs(90 - peso_c2); //diferença da distância a 90 dos pesos
+    if(r == 0){
+        //se a distância a 90 for igual, comparar as alturas
+        int altura_c1 = ((cozinheiro *)c1)->altura;
+        int altura_c2 = ((cozinheiro *)c2)->altura;
 
-//função de trocar, da para remover
-void swap_employee(cozinheiro *left, cozinheiro *right)
-{
-    cozinheiro tmp = *right;
-    *right = *left;
-    *left = tmp;
-}
+        if(altura_c1 == altura_c2){
+            //se também as alturas forem iguais, comparar o nome
+            char nome_c1[21];
+            char nome_c2[21]; 
+            strcpy(nome_c1, ((cozinheiro *)c1)->nome);
+            strcpy(nome_c2, ((cozinheiro *)c2)->nome);
 
-void ordenar(cozinheiro *arr, int left, int right)
-{
-    cozinheiro p = arr[(left+right)/2];    // as good as any
-    int l = left, r = right;   // movable indicies
-
-    while (l <= r)
-    {
-        while (compare_employee(arr+l, &p) < 0)
-            ++l;
-        while (compare_employee(arr+r, &p) > 0)
-            --r;
-        if (l <= r)
-        {
-            swap_employee(arr+l, arr+r);
-            ++l; --r;
+            return strcmp(nome_c1, nome_c2);
+        }
+        else{
+            r = altura_c2 - altura_c1;
+            return r;
         }
     }
-
-    if (left < r)
-        ordenar(arr, left, r);
-    if (l < right)
-        ordenar(arr, l, right);
+    else
+        return r;
 }
-
 
 int main(){
     int n;
@@ -55,12 +47,16 @@ int main(){
     cozinheiro pessoas[n];
 
     for(int i = 0; i < n; i++){
-        if(scanf("%s %d %d", pessoas[i].nome, pessoas[i].peso, pessoas[i].altura) != 3){
+        if(scanf("%s %d %d", pessoas[i].nome, &pessoas[i].peso, &pessoas[i].altura) != 3){
             return 1;
         }
     }
 
-    //sort cozinheiro
+    qsort(pessoas, n, sizeof(pessoas[0]), comparador);
+
+    for(int i = 0; i < n; i++){
+        printf("%s %d %d\n", pessoas[i].nome, pessoas[i].peso, pessoas[i].altura);
+    }
     
     return 0;
 }
