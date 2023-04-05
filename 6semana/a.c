@@ -83,6 +83,8 @@ int main(){
             printf(" %d", resultados[i][j]);
         }
         putchar('\n');
+        
+        free(resultados[i]);
     }
      
     return 0;
